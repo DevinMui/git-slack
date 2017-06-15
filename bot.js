@@ -1,6 +1,6 @@
 var SlackBot = require('slackbots');
 var mongoose = require('mongoose')
-var exec = require('child_process').exec
+var exec = require('child_process').execSync
 
 mongoose.connect("mongodb://localhost/gitslack")
 
@@ -57,16 +57,12 @@ bot.on('message', function(data) {
 					Channel.findOne({channel_id: data.channel}, function(err, channel){
 						var name = channel.name
 						bot.postMessageToChannel(name, "Pulling from Github...")
-						exec("cd ../loaf && git pull", function(){
-							bot.postMessageToChannel(name, "Killing server...")	
-							exec("ps aux | grep -i 'node app.js' | awk '{print $2}' | xargs sudo kill -9", function(){
-								bot.postMessageToChannel(name, "Restarting server...")
-								exec("cd ../loaf && sudo nohup node app.js &", function(){
-									bot.postMessageToChannel(name, "Done!")
-								})
-							})
-						})
-						
+						exec("cd ../loaf && git pull")
+						bot.postMessageToChannel(name, "Killing server...")	
+						exec("ps aux | grep -i 'node app.js' | awk '{print $2}' | xargs sudo kill -9")
+						bot.postMessageToChannel(name, "Restarting server...")
+						exec("cd ../loaf && sudo nohup node app.js &")
+						bot.postMessageToChannel(name, "Done!")						
 					})
 				}
 			}
