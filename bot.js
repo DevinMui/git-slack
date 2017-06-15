@@ -55,13 +55,14 @@ bot.on('message', function(data) {
 			if(text[1]==="deploy"){
 				if(text[2]==="production"){
 					Channel.findOne({channel_id: data.channel}, function(err, channel){
-						bot.postMessageToChannel(channel.name, "Pulling from Github...")
+						var name = channel.name
+						bot.postMessageToChannel(name, "Pulling from Github...")
 						exec("cd ../loaf && git pull", function(){
-							bot.postMessageToChannel(channel.name, "Killing server...")	
+							bot.postMessageToChannel(name, "Killing server...")	
 							exec("ps aux | grep -i 'node app.js' | awk '{print $2}' | xargs sudo kill -9", function(){
-								bot.postMessageToChannel(channel.name, "Restarting server...")
+								bot.postMessageToChannel(name, "Restarting server...")
 								exec("cd ../loaf && sudo nohup node app.js &", function(){
-									bot.postMessageToChannel(channel.name, "Done!")
+									bot.postMessageToChannel(name, "Done!")
 								})
 							})
 						})
