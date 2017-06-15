@@ -1,6 +1,6 @@
 var SlackBot = require('slackbots');
 var mongoose = require('mongoose')
-var exec = require('child_process').execSync
+var exec = require('child_process').exec
 
 mongoose.connect("mongodb://localhost/gitslack")
 
@@ -56,13 +56,20 @@ bot.on('message', function(data) {
 				if(text[2]==="production"){
 					Channel.findOne({channel_id: data.channel}, function(err, channel){
 						var name = channel.name
+						console.log("GitSlack invoked in channel " + name)
+						
 						bot.postMessageToChannel(name, "Pulling from Github...")
-						exec("cd ../loaf && git pull")
-						bot.postMessageToChannel(name, "Killing server...")	
-						exec("ps aux | grep -i 'node app.js' | awk '{print $2}' | xargs sudo kill -9")
-						bot.postMessageToChannel(name, "Restarting server...")
-						exec("cd ../loaf && sudo nohup node app.js &")
-						bot.postMessageToChannel(name, "Done!")						
+						exec("cd ../loaf && git pull", function(){
+							bot.postMessageToChannel(name, "Killing server...")
+							exec("ps aux | grep -i 'node app.js' | awk '{print $2}' | xargs sudo kill -9", function(){
+								bot.postMessageToChannel(name, "Restarting server...")
+								exec("cd ../loaf && (printf '\n' | sudo nohup node app.js > log.out &)", function(){
+									console.log("Done?")
+									bot.postMessageToChannel(name, "Done!")
+								})
+							})
+						
+						})
 					})
 				}
 			}
