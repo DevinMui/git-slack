@@ -1,0 +1,25 @@
+{
+  "name": "git-slack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "mongoose": "^4.10.6",
+    "slackbots": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevinMui/git-slack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevinMui/git-slack/issues"
+  },
+  "homepage": "https://github.com/DevinMui/git-slack#readme"
+}
